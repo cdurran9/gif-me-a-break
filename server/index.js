@@ -22,33 +22,33 @@ app.get('/api/check-room/:roomCode', (req, res) => {
   res.json({ valid: foundRoom !== undefined });
 });
 
-io.on('connection', client => {
-  const roomCode = client.handshake.query.roomCode;
-  console.log(`Client ${client.id} connected with query: ${roomCode}`);
-  client['_roomCode'] = roomCode;
+io.on('connection', socket => {
+  const roomCode = socket.handshake.query.roomCode;
+  console.log(`Client ${socket.id} connected with query: ${roomCode}`);
+  socket['_roomCode'] = roomCode;
 
   const foundRoom = rooms[roomCode];
   if (!foundRoom) {
-    rooms[roomCode] = {players: [client.id]};
+    rooms[roomCode] = {players: [socket.id]};
   } else {
-    foundRoom.players.push(client.id);
+    foundRoom.players.push(socket.id);
   }
 
   // client.broadcast.emit('Players:')
-  client.on('message', (msg) => {
+  socket.on('message', (msg) => {
     console.log('client says: ' + msg);
     io.emit('message', 'hi back');
   });
 
-  client.on('disconnect', (reason) => {
-    console.log(`Client ${client.id} disconnected: ${reason}`);
-    const roomCode = client['_roomCode'];
+  socket.on('disconnect', (reason) => {
+    console.log(`Client ${socket.id} disconnected: ${reason}`);
+    const roomCode = socket['_roomCode'];
     // console.log(`They were in room ${roomCode}`);
     if (roomCode) {
       const room = rooms[roomCode];
       // console.log(`The room looks like this: ${JSON.stringify(room)}`);
       if (room) {
-        const myPlayerIndex = room.players.indexOf(client.id);
+        const myPlayerIndex = room.players.indexOf(socket.id);
         // console.log(`They were player index ${myPlayerIndex}`);
         if (myPlayerIndex !== undefined) {
           room.players.splice(myPlayerIndex, 1);
