@@ -3,8 +3,7 @@ import { io } from 'socket.io-client';
 
 import logo from './logo.svg';
 import './App.css';
-
-const ROOM_CODE = 'ABCD';
+import ConnectForm from './components/connect/ConnectForm';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -20,12 +19,15 @@ function App() {
     getData();
   }, []);
 
-  const connectHandler = () => {
+  const connectHandler = (roomCode) => {
     // const response = await fetch(`/api/connect/${ROOM_CODE}`);
     // const data = await response.json();
     // console.log('Connected:', data);
-    const socket = io();
-    setSocket(socket);
+    const newSocket = io({query: { roomCode }});
+    newSocket.on('message', (msg) => {
+      console.log('Server told me to tell you ' + msg);
+    });
+    setSocket(newSocket);
     setIsConnected(true);
   }
 
@@ -40,7 +42,7 @@ function App() {
         <p>
           {message}
         </p>
-        {!isConnected && <button onClick={connectHandler}>Connect</button>}
+        {!isConnected && <ConnectForm onConnect={connectHandler} />}
         {isConnected && <button onClick={sayHiHandler}>Say hi</button>}
       </header>
     </div>
