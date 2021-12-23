@@ -116,10 +116,10 @@ const createStyles = createUseStyles({
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: '40px',
     display: 'block',
-    transition: 'background-color 0.3s',
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    },
+    transition: 'border-color 0.3s',
+    // '&:hover': {
+    //   borderColor: 'rgba(44, 90, 163, 255)',
+    // },
   },
   connectButton: {
     display: 'block',
