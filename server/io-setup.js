@@ -1,6 +1,6 @@
 const GAME_PHASE_LENGTHS = {
-  text: 60,
-  gifTags: 60,
+  text: 120,
+  gifTags: 120,
   combo: 180,
 };
 
